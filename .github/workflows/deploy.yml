@@ -13,10 +13,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Create necessary directories
+      run: |
+        mkdir -p public/styles public/scripts
+        
+    - name: Setup files
+      run: |
+        cp index.html public/
+        cp styles/styles.css public/styles/
+        cp scripts/main.js public/scripts/
+
     - name: Inject API key into HTML
       run: |
         API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}
-        echo "<meta name='google-maps-api-key' content='$API_KEY'>" >> public/index.html
+        sed -i "6i\    <meta name='google-maps-api-key' content='$API_KEY'>" public/index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
